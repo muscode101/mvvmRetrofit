@@ -21,24 +21,13 @@ class MainActivity : AppCompatActivity() {
     private var newsAdapter: NewsAdapter? = null
     private lateinit var newsViewModel: ViewModel
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-
-        newsViewModel = ViewModelProviders.of(this).get(ViewModel::class.java)
-        newsViewModel.init()
-
-        newsViewModel.getNewsRepository()!!.observe(this, Observer<NewsResponse> {
-            it?.let {
-                val newsArticles = it.articles
-                articleArrayList.addAll(newsArticles!!)
-                newsAdapter!!.notifyDataSetChanged()
-            }
-
-        })
+        initViewModel()
+        initNewsListener()
 
         setupRecyclerView()
         showProgress()
@@ -48,11 +37,25 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun showProgress(){
+    private fun initViewModel(){
+        newsViewModel = ViewModelProviders.of(this).get(ViewModel::class.java)
+        newsViewModel.init()
+    }
+
+    private fun initNewsListener(){
+        newsViewModel.getNewsRepository()!!.observe(this, Observer<NewsResponse> {
+            it?.let {
+                val newsArticles = it.articles
+                articleArrayList.addAll(newsArticles!!)
+                newsAdapter!!.notifyDataSetChanged()
+            }
+        })
+    }
+
+    private fun showProgress(){
         iv_progress.startAnimation(
             AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely) )
     }
-
 
     private fun setupRecyclerView() {
         if (newsAdapter == null) {
@@ -65,5 +68,4 @@ class MainActivity : AppCompatActivity() {
             newsAdapter!!.notifyDataSetChanged()
         }
     }
-
 }

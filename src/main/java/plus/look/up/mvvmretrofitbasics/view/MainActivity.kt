@@ -1,6 +1,7 @@
 package plus.look.up.mvvmretrofitbasics.view
 
 import android.os.Bundle
+import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -40,8 +41,16 @@ class MainActivity : AppCompatActivity() {
         })
 
         setupRecyclerView()
+        showProgress()
 
+        iv_progress.setOnClickListener {
+            iv_progress.animation.cancel()
+        }
+    }
 
+    fun showProgress(){
+        iv_progress.startAnimation(
+            AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely) )
     }
 
 
